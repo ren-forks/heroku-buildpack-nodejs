@@ -65,6 +65,15 @@ install_yarn() {
   echo "Installed yarn $(yarn --version)"
 }
 
+install_typescript() {
+  local dir="$1"
+  local version=${2:-3.x}
+
+  npm install -g typescript@"$version" --prefix "$dir"
+
+  echo "Installed typescript $(tsc --version)"
+}
+
 install_nodejs() {
   local version=${1:-12.x}
   local dir="${2:?}"

@@ -91,9 +91,15 @@ meta_set "build-step" "init"
 
 ### Check initial state
 
+uses_typescript() {
+  local BUILD_DIR=$1
+  [[ -f "$BUILD_DIR/index.ts" || -f "$BUILD_DIR/server.ts" ]]
+}
+
 [ -e "$BUILD_DIR/node_modules" ] && PREBUILD=true || PREBUILD=false
 [ -f "$BUILD_DIR/yarn.lock" ] && YARN=true || YARN=false
 [ -f "$BUILD_DIR/package-lock.json" ] && NPM_LOCK=true || NPM_LOCK=false
+[ uses_typescript ] && TYPESCRIPT=true || TYPESCRIPT=false
 
 ### Save build info
 features_init "nodejs" "$BUILD_DIR" "$CACHE_DIR" "$BP_DIR/features"
@@ -138,20 +144,25 @@ create_build_env
 export YARN_CACHE_FOLDER NPM_CONFIG_CACHE
 
 install_bins() {
-  local node_engine iojs_engine npm_engine yarn_engine npm_version node_version
+  local node_engine npm_engine yarn_engine typescript_engine npm_version node_version
 
   node_engine=$(read_json "$BUILD_DIR/package.json" ".engines.node")
   npm_engine=$(read_json "$BUILD_DIR/package.json" ".engines.npm")
   yarn_engine=$(read_json "$BUILD_DIR/package.json" ".engines.yarn")
+  typescript_engine=$(read_json "$BUILD_DIR/package.json" ".engines.typescript")
 
   meta_set "node-version-request" "$node_engine"
   meta_set "npm-version-request" "$npm_engine"
   meta_set "yarn-version-request" "$yarn_engine"
+  meta_set "typescript-version-request" "$typescript_engine"
 
   echo "engines.node (package.json):  ${node_engine:-unspecified}"
   echo "engines.npm (package.json):   ${npm_engine:-unspecified (use default)}"
   if $YARN; then
     echo "engines.yarn (package.json):  ${yarn_engine:-unspecified (use default)}"
+  fi
+  if $TYPESCRIPT; then
+    echo "engines.typescript (package.json): ${typescript_engine:-unspecified (use default)}"
   fi
   echo ""
 
@@ -181,6 +192,11 @@ install_bins() {
   else
     mcount "version.npm.$(npm --version)"
     meta_set "npm-version" "$(npm --version)"
+  fi
+
+  if $TYPESCRIPT; then
+    meta_set "build-step" "install-typescript"
+    monitor "install-typescript" install_typescript "$BUILD_DIR/.heroku/typescript" "$typescript_engine"
   fi
 
   warn_old_npm
@@ -259,6 +275,8 @@ build_dependencies() {
   meta_set "build-step" "build-script"
   header "Build"
   run_build_script "$BUILD_DIR"
+
+  run_typescript_compile "$BUILD_DIR"
 }
 
 meta_set "build-step" "install-dependencies"

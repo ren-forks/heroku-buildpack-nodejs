@@ -73,6 +73,12 @@ run_build_script() {
   fi
 }
 
+run_typescript_compile() {
+  local build_dir=${1:-}
+
+  tsc "$build_dir"
+}
+
 log_build_scripts() {
   local build_dir=${1:-}
 
