@@ -75,8 +75,8 @@ run_build_script() {
 
 run_typescript_compile() {
   local build_dir=${1:-}
-
-  tsc "$build_dir"
+  cd "$build_dir"
+  tsc
 }
 
 log_build_scripts() {
