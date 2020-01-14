@@ -86,7 +86,7 @@ yarn_node_modules() {
   local build_dir=${1:-}
   local production=${YARN_PRODUCTION:-false}
 
-  echo "Installing node modules (yarn.lock, `--network-concurrency 1`)"
+  echo "Installing node modules (yarn.lock, with \`--network-concurrency 1\`)"
   cd "$build_dir" || return
   monitor "yarn-install" yarn install --network-concurrency 1 --production="$production" --frozen-lockfile --ignore-engines 2>&1
 }
