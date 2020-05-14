@@ -4,7 +4,7 @@
 
 This is the official [Heroku buildpack](http://devcenter.heroku.com/articles/buildpacks) for Node.js apps.
 
-[![Build Status](https://travis-ci.org/heroku/heroku-buildpack-nodejs.svg)](https://travis-ci.org/heroku/heroku-buildpack-nodejs)
+[![Build Status](https://travis-ci.org/heroku/heroku-buildpack-nodejs.svg?branch=master)](https://travis-ci.org/heroku/heroku-buildpack-nodejs)
 
 ## Documentation
 
@@ -12,6 +12,7 @@ For more information about using this Node.js buildpack on Heroku, see these Dev
 
 - [Heroku Node.js Support](https://devcenter.heroku.com/articles/nodejs-support)
 - [Getting Started with Node.js on Heroku](https://devcenter.heroku.com/articles/nodejs)
+- [Troubleshooting Node.js Deploys](https://devcenter.heroku.com/articles/troubleshooting-node-deploys)
 
 For more general information about buildpacks on Heroku:
 
@@ -20,16 +21,15 @@ For more general information about buildpacks on Heroku:
 
 ## Locking to a buildpack version
 
-In production, you frequently want to lock all of your dependencies - including
-buildpacks - to a specific version. That way, you can regularly update and
-test them, upgrading with confidence.
+In production, you may want to lock dependencies - including
+buildpacks - to a specific version.
 
 First, find the version you want from
 [the list of buildpack versions](https://github.com/heroku/heroku-buildpack-nodejs/releases).
 Then, specify that version with `buildpacks:set`:
 
 ```
-heroku buildpacks:set https://github.com/heroku/heroku-buildpack-nodejs#v83 -a my-app
+heroku buildpacks:set https://github.com/heroku/heroku-buildpack-nodejs#v170 -a my-app
 ```
 
 If you have trouble upgrading to the latest version of the buildpack, please
@@ -48,7 +48,17 @@ Having trouble? Dig it? Feature request?
 - [@adamzdanielle](http://twitter.com/adamzdanielle)
 - [GitHub issues](https://github.com/heroku/heroku-buildpack-nodejs/issues)
 
-## Hacking
+## Development
+
+### Prerequisites
+
+For local development, you may need the following tools:
+
+- [Docker](https://hub.docker.com/search?type=edition&offering=community)
+- [Go 1.14](https://golang.org/doc/install#install)
+- [upx](https://upx.github.io/)
+
+### Deploying an app with a fork or branch
 
 To make changes to this buildpack, fork it on GitHub.
 Push up changes to your fork, then create a new Heroku app to test it,
@@ -65,10 +75,20 @@ heroku buildpacks:set <your-github-url>
 heroku buildpacks:set <your-github-url>#your-branch
 ```
 
+### Downloading Plugins
+
+In order to download the latest plugins that have been released, run the following:
+
+```
+plugin/download.sh v$VERSION
+```
+
+Make sure the version is in the format `v#`, ie. `v7`.
+
 ## Tests
 
 The buildpack tests use [Docker](https://www.docker.com/) to simulate
-Heroku's Cedar-14 and Heroku-16 containers.
+Heroku's stacks.
 
 To run the test suite:
 
@@ -76,47 +96,14 @@ To run the test suite:
 make test
 ```
 
-Or to just test in cedar or cedar-14:
+Or to just test a specific stack:
 
 ```
-make test-cedar-14
-make test-heroku-16
+make heroku-16
+make heroku-18
+make heroku-20
 ```
 
 The tests are run via the vendored
 [shunit2](https://github.com/kward/shunit2)
 test framework.
-
-## Updating go binaries
-
-If you would like to develop and update the go binaries you will need to install 
-[go 1.12](https://golang.org/doc/install#install) and [upx](https://upx.github.io/)
-
-## Proxy Issues
-
-If your builds are not completing and have errors you may need to examine your build environment for `HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY` environment variables. A few examples of build output that may indicate issues with these values are below.
-
-```
-// ... 
------> Installing binaries
-       engines.node (package.json):  10
-       engines.npm (package.json):   unspecified (use default)
-
-       Resolving node version 10...
-       Error: Unknown error installing "10" of node
-
------> Build failed
-// ...
-```
-
-```
-// ...
------> Node.js app detected
-curl: (35) OpenSSL SSL_connect: SSL_ERROR_SYSCALL in connection to lang-common.s3.amazonaws.com:443
-// ...
-```
-
-If the environment where you are running the buildpack does not require a proxy to be used for HTTP connections you should try setting
-the `NO_PROXY` environment variable to `amazonaws.com`, i.e. running the command `export NO_PROXY=amazonaws.com` immediatly before executing
-the buildpack or by setting that environment value inside the buildpack. If you find `HTTP_PROXY` and `HTTPS_PROXY` environment variables and do not need a proxy in your build environment then the environment
-variables should be removed.

@@ -1,13 +1,34 @@
 # Node.js Buildpack Changelog
 
 ## master
-- Make minor upgrades to gems ([#735](https://github.com/heroku/heroku-buildpack-nodejs/pull/735))
+- display yarn engine log to build output when engine is provided in monorepo ([#771](https://github.com/heroku/heroku-buildpack-nodejs/pull/771))
+- move proxy issues section from readme to dev center ([#778](https://github.com/heroku/heroku-buildpack-nodejs/pull/778))
+- warn when NO_PROXY is not set to "amazonaws.com" and HTTP_PROXY or HTTPS_PROXY is set ([#782](https://github.com/heroku/heroku-buildpack-nodejs/pull/782))
 
-## V166 (2019-12-16)
+## v171 (2020-04-27)
+- Update Travis badge to `master` and other changes in README ([#753](https://github.com/heroku/heroku-buildpack-nodejs/pull/753))
+- Up feature flag test groups ([#758](https://github.com/heroku/heroku-buildpack-nodejs/pull/758))
+- Add Heroku-20 to the Travis test matrix ([#763](https://github.com/heroku/heroku-buildpack-nodejs/pull/763))
+- Add Node 14 plugin and rebuild 10, 12, and 13; Remove rebuilding of 8, 9, and 11 ([#767](https://github.com/heroku/heroku-buildpack-nodejs/pull/767))
+- Add spec support for Node 13 and 14 ([#766](https://github.com/heroku/heroku-buildpack-nodejs/pull/766))
+
+## v170 (2020-03-31)
+- Bump rake from 12.3.1 to 12.3.3 ([#742](https://github.com/heroku/heroku-buildpack-nodejs/pull/742))
+- Upgrade Go to 1.14 ([#744](https://github.com/heroku/heroku-buildpack-nodejs/pull/744))
+- Bump `npm ci` usage for installing dependencies to 20% ([#745](https://github.com/heroku/heroku-buildpack-nodejs/pull/745))
+- Detect Yarn 2 usage, produce error message, and fail build (until supported) ([#746](https://github.com/heroku/heroku-buildpack-nodejs/pull/746))
+- Compress yq binaries ([#748](https://github.com/heroku/heroku-buildpack-nodejs/pull/748))
+- Move etc/vendor to lib/vendor ([#750](https://github.com/heroku/heroku-buildpack-nodejs/pull/750))
+
+## v167 (2020-02-06)
+- Make minor upgrades to gems ([#735](https://github.com/heroku/heroku-buildpack-nodejs/pull/735))
+- Fix typo in failure metadata call ([#737](https://github.com/heroku/heroku-buildpack-nodejs/pull/737))
+
+## v166 (2019-12-16)
 - Add Node 13 metrics plugin ([#731](https://github.com/heroku/heroku-buildpack-nodejs/pull/731), [#732](https://github.com/heroku/heroku-buildpack-nodejs/pull/732))
 - Fix yarn cache feature flag ([#729](https://github.com/heroku/heroku-buildpack-nodejs/pull/729))
 
-## V165 (2019-10-24)
+## v165 (2019-10-24)
 - Update README ([#725](https://github.com/heroku/heroku-buildpack-nodejs/pull/725))
 - Update default Node version to 12.x ([#724](https://github.com/heroku/heroku-buildpack-nodejs/pull/724))
 
